@@ -1,61 +1,88 @@
-# Gerenciador de Tarefas
+# 📋 Gerenciador de Tarefas
 
-API REST para gerenciamento de projetos, responsáveis e tarefas, desenvolvida com **Java + Spring Boot + Spring Data JPA + Hibernate + PostgreSQL**.
-
-O projeto foi desenvolvido com foco em demonstrar conceitos de desenvolvimento de APIs REST, persistência de dados, relacionamento entre entidades, regras de negócio, filtros e tratamento de exceções.
+> API REST para gerenciamento de projetos, responsáveis e tarefas, desenvolvida com Java e Spring Boot.
 
 ---
 
-## 👨‍🎓 Informações do aluno
+## 👨‍🎓 Informações Acadêmicas
 
-**Aluno:** José Gustavo Gonçalves da Silva  
-**Matrícula:** 47531363
-
----
-
-## 📌 Sobre o projeto
-
-O sistema permite cadastrar e consultar:
-
-- **Projetos**
-- **Responsáveis**
-- **Tarefas**
-
-Uma tarefa obrigatoriamente pertence a um projeto e pode possuir um responsável.
-
-Além das operações básicas de cadastro e consulta, a API permite:
-
-- listar tarefas;
-- buscar uma tarefa específica;
-- atualizar tarefas;
-- excluir tarefas;
-- filtrar tarefas por status;
-- filtrar tarefas por projeto;
-- combinar os dois filtros;
-- controlar automaticamente a data de conclusão;
-- validar a existência de projeto e responsável;
-- retornar erros estruturados quando um recurso não é encontrado.
-
----
-
-# 🛠️ Tecnologias utilizadas
-
-| Tecnologia | Utilização |
+| Informação | Dados |
 |---|---|
-| Java 25 | Linguagem de programação |
-| Spring Boot 4.1.1 | Framework principal |
-| Spring Web | Construção da API REST |
-| Spring Data JPA | Persistência e acesso ao banco |
-| Hibernate | ORM |
-| PostgreSQL 18 | Banco de dados |
-| Maven Wrapper | Gerenciamento e execução do projeto |
-| IntelliJ IDEA | IDE utilizada no desenvolvimento |
+| **Aluno** | José Gustavo Gonçalves da Silva |
+| **Matrícula** | 47531363 |
+| **Curso** | Computação |
+| **Tecnologia principal** | Java + Spring Boot |
 
 ---
 
-# 🏗️ Arquitetura do projeto
+## 🚀 Sobre o Projeto
 
-O projeto foi organizado separando responsabilidades entre diferentes camadas:
+O **Gerenciador de Tarefas** é uma API REST desenvolvida para gerenciar projetos, responsáveis e tarefas.
+
+A aplicação permite:
+
+- Criar e consultar projetos
+- Cadastrar responsáveis
+- Criar tarefas vinculadas a projetos
+- Associar responsáveis às tarefas
+- Atualizar tarefas
+- Alterar status e prioridade
+- Filtrar tarefas
+- Excluir tarefas
+- Validar recursos inexistentes
+- Persistir os dados em PostgreSQL
+
+---
+
+## 🧩 Funcionalidades
+
+### 📁 Projetos
+
+- `POST /projetos` — Criar projeto
+- `GET /projetos` — Listar projetos
+- `GET /projetos/{id}` — Buscar projeto por ID
+
+### 👤 Responsáveis
+
+- `POST /responsaveis` — Criar responsável
+- `GET /responsaveis` — Listar responsáveis
+- `GET /responsaveis/{id}` — Buscar responsável por ID
+
+### ✅ Tarefas
+
+- `POST /tarefas` — Criar tarefa
+- `GET /tarefas` — Listar tarefas
+- `GET /tarefas/{id}` — Buscar tarefa por ID
+- `PUT /tarefas/{id}` — Atualizar tarefa
+- `DELETE /tarefas/{id}` — Excluir tarefa
+
+---
+
+## 🔎 Filtros de Tarefas
+
+### Por status
+
+```http
+GET /tarefas?status=NOVA
+```
+
+### Por projeto
+
+```http
+GET /tarefas?projetoId=1
+```
+
+### Por status e projeto
+
+```http
+GET /tarefas?status=NOVA&projetoId=1
+```
+
+---
+
+## 🏗️ Arquitetura
+
+O projeto foi organizado seguindo uma separação em camadas:
 
 ```text
 src/
@@ -63,274 +90,224 @@ src/
     ├── java/
     │   └── br/com/gustavogoncc/gerenciadortarefas/
     │       ├── controller/
+    │       │   ├── ApiExceptionHandler.java
+    │       │   ├── ProjetoController.java
+    │       │   ├── ResponsavelController.java
+    │       │   └── TarefaController.java
     │       ├── domain/
-    │       │   └── exception/
+    │       │   ├── exception/
+    │       │   │   └── RecursoNaoEncontradoException.java
+    │       │   ├── Prioridade.java
+    │       │   ├── Projeto.java
+    │       │   ├── Responsavel.java
+    │       │   ├── Status.java
+    │       │   └── Tarefa.java
     │       ├── repository/
+    │       │   ├── ProjetoRepository.java
+    │       │   ├── ResponsavelRepository.java
+    │       │   └── TarefaRepository.java
     │       └── service/
-    │
+    │           ├── ProjetoService.java
+    │           ├── ResponsavelService.java
+    │           └── TarefaService.java
     └── resources/
         └── application.properties
-Controller
+```
 
-Responsável por receber as requisições HTTP e expor os endpoints da API.
+### Responsabilidade das camadas
 
-Exemplos:
+| Camada | Responsabilidade |
+|---|---|
+| **Controller** | Receber requisições HTTP e retornar respostas |
+| **Service** | Concentrar regras de negócio |
+| **Repository** | Acessar e persistir dados |
+| **Domain** | Representar entidades e regras do domínio |
+| **Exception** | Tratar erros específicos da aplicação |
 
-ProjetoController
-ResponsavelController
-TarefaController
+---
 
-Os controllers não concentram as regras de negócio. Eles recebem os dados da requisição e delegam as operações aos services.
+## 🗄️ Modelo de Dados
 
-Service
+O banco de dados utiliza três entidades principais:
 
-Responsável pelas regras de negócio da aplicação.
+```text
+PROJETO (1) ──────────── (N) TAREFA (N) ──────────── (1) RESPONSAVEL
+   │                         │                              │
+   ├── id                    ├── id                         ├── id
+   ├── nome                  ├── titulo                     ├── nome
+   ├── descricao             ├── descricao                  └── email
+   └── criado_em             ├── status
+                             ├── prioridade
+                             ├── prazo
+                             ├── criada_em
+                             ├── concluida_em
+                             ├── projeto_id
+                             └── responsavel_id
+```
 
-Exemplos:
+### Relacionamentos
 
-ProjetoService
-ResponsavelService
-TarefaService
+- Um **Projeto** pode possuir várias tarefas.
+- Uma **Tarefa** pertence obrigatoriamente a um projeto.
+- Uma **Tarefa** pode possuir um responsável.
+- Um **Responsável** pode estar associado a várias tarefas.
 
-No TarefaService, por exemplo, antes de criar uma tarefa o sistema verifica se o projeto informado existe e, quando informado, se o responsável também existe.
+---
 
-Repository
+## 🔄 Status das Tarefas
 
-Responsável pela comunicação com o banco de dados utilizando Spring Data JPA.
+| Status | Descrição |
+|---|---|
+| `NOVA` | Tarefa criada e ainda não iniciada |
+| `EM_ANDAMENTO` | Tarefa atualmente em execução |
+| `CONCLUIDA` | Tarefa finalizada |
+| `CANCELADA` | Tarefa cancelada |
 
-Exemplos:
+---
 
-ProjetoRepository
-ResponsavelRepository
-TarefaRepository
+## ⚡ Prioridades
 
-Os repositories estendem JpaRepository, recebendo operações como:
+| Prioridade | Descrição |
+|---|---|
+| `BAIXA` | Baixa prioridade |
+| `MEDIA` | Prioridade intermediária |
+| `ALTA` | Alta prioridade |
 
-save()
-findAll()
-findById()
-delete()
+---
 
-O TarefaRepository também possui consultas derivadas para filtros:
+## 🛠️ Tecnologias
 
-findByStatus(Status status);
+| Tecnologia | Utilização |
+|---|---|
+| ☕ **Java** | Linguagem principal |
+| 🌱 **Spring Boot** | Desenvolvimento da API |
+| 🌐 **Spring Web** | Endpoints REST |
+| 🗃️ **Spring Data JPA** | Persistência |
+| 🐘 **PostgreSQL** | Banco de dados |
+| 🔗 **Hibernate** | ORM |
+| 📦 **Maven** | Gerenciamento de dependências |
+| 🧪 **Postman** | Testes da API |
+| 💻 **IntelliJ IDEA** | IDE utilizada |
 
-findByProjetoId(Long projetoId);
+---
 
-findByStatusAndProjetoId(Status status, Long projetoId);
-🗃️ Modelo de dados
+## ⚙️ Requisitos
 
-O banco possui três tabelas principais:
+- Java
+- Maven
+- PostgreSQL
+- IntelliJ IDEA ou outra IDE Java
+- Postman (opcional)
 
-PROJETO
-   │
-   │ 1:N
-   ▼
-TAREFA
-   ▲
-   │ N:1
-   │
-RESPONSAVEL
-Projeto
+---
 
-Representa um projeto ao qual as tarefas pertencem.
+## 🗄️ Configuração do Banco
 
-Campos:
+Crie o banco:
 
-Campo	Tipo
-id	Long
-nome	String
-descricao	String
-criadoEm	LocalDateTime
+```sql
+CREATE DATABASE gerenciador_tarefas;
+```
 
-O nome é obrigatório e possui limite de 80 caracteres.
+Configure as credenciais em:
 
-Responsável
+```text
+src/main/resources/application.properties
+```
 
-Representa uma pessoa responsável por uma tarefa.
+Exemplo:
 
-Campos:
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/gerenciador_tarefas
+spring.datasource.username=postgres
+spring.datasource.password=SUA_SENHA
 
-Campo	Tipo
-id	Long
-nome	String
-email	String
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
 
-Nome e email são obrigatórios.
+> ⚠️ Não publique senhas reais no GitHub.
 
-Tarefa
+---
 
-Representa uma atividade vinculada a um projeto.
+## ▶️ Executando o Projeto
 
-Campos:
+Clone o repositório:
 
-Campo	Tipo
-id	Long
-titulo	String
-descricao	String
-status	Status
-prioridade	Prioridade
-prazo	LocalDate
-criadaEm	LocalDateTime
-concluidaEm	LocalDateTime
-projeto	Projeto
-responsavel	Responsavel
-🔗 Relacionamentos JPA
+```bash
+git clone URL_DO_REPOSITORIO
+```
 
-A entidade Tarefa possui dois relacionamentos ManyToOne.
+Entre na pasta:
 
-Projeto
-@ManyToOne(fetch = FetchType.EAGER, optional = false)
-@JoinColumn(name = "projeto_id", nullable = false)
-private Projeto projeto;
+```bash
+cd gerenciador-tarefas
+```
 
-Isso significa que toda tarefa precisa estar vinculada a um projeto.
+No Windows:
 
-Responsável
-@ManyToOne(fetch = FetchType.EAGER)
-@JoinColumn(name = "responsavel_id")
-private Responsavel responsavel;
+```powershell
+.\mvnw.cmd spring-boot:run
+```
 
-O responsável é opcional.
+A API estará disponível em:
 
-📊 Status das tarefas
-
-O sistema possui quatro status:
-
-public enum Status {
-    NOVA,
-    EM_ANDAMENTO,
-    CONCLUIDA,
-    CANCELADA
-}
-🚦 Prioridade das tarefas
-
-Existem três níveis de prioridade:
-
-public enum Prioridade {
-    BAIXA,
-    MEDIA,
-    ALTA
-}
-
-Caso uma prioridade não seja informada na criação ou atualização, a aplicação utiliza MEDIA.
-
-⏱️ Regra de conclusão
-
-A entidade Tarefa possui uma regra para controlar concluidaEm.
-
-Quando uma tarefa passa para:
-
-CONCLUIDA
-
-o sistema registra automaticamente a data e hora:
-
-LocalDateTime.now()
-
-em concluidaEm.
-
-Se uma tarefa que estava concluída voltar para outro status, concluidaEm é removida.
-
-Essa regra está implementada no método atualizar() da entidade Tarefa.
-
-🌐 Endpoints da API
-
-A aplicação roda, por padrão, em:
-
+```text
 http://localhost:8080
-📁 Projetos
-Listar projetos
-GET /projetos
+```
 
-Exemplo:
+---
 
-Invoke-RestMethod -Uri "http://localhost:8080/projetos" -Method GET
-Buscar projeto
-GET /projetos/{id}
+## 🧪 Testando a API
 
-Exemplo:
+A coleção do Postman está em:
 
-Invoke-RestMethod -Uri "http://localhost:8080/projetos/1" -Method GET
-Criar projeto
+```text
+postman/Gerenciador-de-Tarefas.postman_collection.json
+```
+
+Ela contém requisições para os principais endpoints da aplicação.
+
+---
+
+## 📌 Exemplos de Requisições
+
+### Criar projeto
+
+```http
 POST /projetos
+Content-Type: application/json
+```
 
-Body:
-
+```json
 {
-  "nome": "Projeto Teste API",
-  "descricao": "Projeto criado pela API"
+  "nome": "Sistema de Gestão",
+  "descricao": "Desenvolvimento do sistema de gerenciamento de tarefas"
 }
+```
 
-Exemplo no PowerShell:
+### Criar responsável
 
-$body = @{
-    nome = "Projeto Teste API"
-    descricao = "Projeto criado pela API"
-} | ConvertTo-Json
-
-Invoke-RestMethod `
-  -Uri "http://localhost:8080/projetos" `
-  -Method POST `
-  -ContentType "application/json; charset=utf-8" `
-  -Body $body
-
-A criação retorna HTTP 201 Created.
-
-👤 Responsáveis
-Listar responsáveis
-GET /responsaveis
-
-Exemplo:
-
-Invoke-RestMethod `
-  -Uri "http://localhost:8080/responsaveis" `
-  -Method GET
-Buscar responsável
-GET /responsaveis/{id}
-Criar responsável
+```http
 POST /responsaveis
+Content-Type: application/json
+```
 
-Body:
-
+```json
 {
   "nome": "Maria Oliveira",
   "email": "maria@email.com"
 }
+```
 
-Exemplo:
+### Criar tarefa
 
-$body = @{
-    nome = "Maria Oliveira"
-    email = "maria@email.com"
-} | ConvertTo-Json
-
-Invoke-RestMethod `
-  -Uri "http://localhost:8080/responsaveis" `
-  -Method POST `
-  -ContentType "application/json; charset=utf-8" `
-  -Body $body
-✅ Tarefas
-Listar tarefas
-GET /tarefas
-
-Exemplo:
-
-Invoke-RestMethod `
-  -Uri "http://localhost:8080/tarefas" `
-  -Method GET
-Buscar tarefa
-GET /tarefas/{id}
-
-Exemplo:
-
-Invoke-RestMethod `
-  -Uri "http://localhost:8080/tarefas/1" `
-  -Method GET
-Criar tarefa
+```http
 POST /tarefas
+Content-Type: application/json
+```
 
-Body:
-
+```json
 {
   "titulo": "Implementar tela de cadastro",
   "descricao": "Criar a tela de cadastro de usuários",
@@ -339,367 +316,153 @@ Body:
   "projetoId": 1,
   "responsavelId": 3
 }
+```
 
-O status não precisa ser informado na criação, pois uma nova tarefa começa automaticamente como:
+### Atualizar tarefa
 
-NOVA
-Atualizar tarefa
-PUT /tarefas/{id}
+```http
+PUT /tarefas/4
+Content-Type: application/json
+```
 
-Exemplo:
+```json
+{
+  "titulo": "Implementar cadastro de usuários",
+  "descricao": "Finalizar a tela de cadastro de usuários",
+  "status": "CONCLUIDA",
+  "prioridade": "ALTA",
+  "prazo": "2026-10-02",
+  "projetoId": 1,
+  "responsavelId": 3
+}
+```
 
-$body = @{
-    titulo = "Implementar cadastro de usuários"
-    descricao = "Finalizar a tela de cadastro de usuários"
-    status = "CONCLUIDA"
-    prioridade = "ALTA"
-    prazo = "2026-10-02"
-    projetoId = 1
-    responsavelId = 3
-} | ConvertTo-Json
+### Excluir tarefa
 
-Invoke-RestMethod `
-  -Uri "http://localhost:8080/tarefas/4" `
-  -Method PUT `
-  -ContentType "application/json; charset=utf-8" `
-  -Body $body
+```http
+DELETE /tarefas/4
+```
 
-Quando o status é alterado para CONCLUIDA, o sistema registra automaticamente concluidaEm.
+---
 
-Excluir tarefa
-DELETE /tarefas/{id}
+## 🚨 Tratamento de Erros
 
-Exemplo:
+A aplicação possui tratamento centralizado através do:
 
-Invoke-RestMethod `
-  -Uri "http://localhost:8080/tarefas/4" `
-  -Method DELETE
+```text
+ApiExceptionHandler
+```
 
-A API retorna HTTP 204 No Content quando a exclusão é realizada.
+Exemplo de recurso inexistente:
 
-🔎 Filtros de tarefas
-
-A API permite filtrar tarefas através de parâmetros de consulta.
-
-Por status
-GET /tarefas?status=NOVA
-
-PowerShell:
-
-Invoke-RestMethod `
-  -Uri "http://localhost:8080/tarefas?status=NOVA" `
-  -Method GET
-Por projeto
-GET /tarefas?projetoId=1
-
-PowerShell:
-
-Invoke-RestMethod `
-  -Uri "http://localhost:8080/tarefas?projetoId=1" `
-  -Method GET
-Por status e projeto
-GET /tarefas?status=NOVA&projetoId=1
-
-PowerShell:
-
-Invoke-RestMethod `
-  -Uri "http://localhost:8080/tarefas?status=NOVA&projetoId=1" `
-  -Method GET
-❌ Tratamento de erros
-
-O projeto possui uma exceção específica:
-
-RecursoNaoEncontradoException
-
-Ela é utilizada quando um recurso solicitado não existe.
-
-Exemplo:
-
-GET /tarefas/999
-
-Resposta:
-
+```json
 {
   "erro": "Tarefa nao encontrada: 999",
   "momento": "2026-09-18T16:17:31.1807162"
 }
+```
+
+---
+
+## 🧠 Regras de Negócio
+
+- Uma tarefa deve obrigatoriamente estar vinculada a um projeto.
+- O responsável de uma tarefa é opcional.
+- Projeto inexistente impede a criação da tarefa.
+- Responsável inexistente impede a criação da tarefa.
+- Tarefas inexistentes não podem ser buscadas, atualizadas ou excluídas.
+- O status inicial de uma nova tarefa é `NOVA`.
+- A prioridade padrão é `MEDIA` quando não informada.
+- Ao alterar uma tarefa para `CONCLUIDA`, `concluidaEm` é preenchido automaticamente.
+- Ao retirar uma tarefa do status `CONCLUIDA`, `concluidaEm` é removido.
+
+---
+
+## ✅ Testes Realizados
+
+- [x] Criar projeto
+- [x] Listar projetos
+- [x] Criar responsável
+- [x] Listar responsáveis
+- [x] Criar tarefa
+- [x] Listar tarefas
+- [x] Buscar tarefa por ID
+- [x] Filtrar por status
+- [x] Filtrar por projeto
+- [x] Filtrar por status + projeto
+- [x] Atualizar tarefa
+- [x] Alterar status para `CONCLUIDA`
+- [x] Registrar `concluidaEm`
+- [x] Excluir tarefa
+- [x] Validar tarefa inexistente
+- [x] Validar projeto inexistente
+- [x] Validar responsável inexistente
+- [x] Confirmar persistência no PostgreSQL
+
+---
+
+## 📂 Estrutura Final do Projeto
+
+```text
+gerenciador-tarefas/
+├── .mvn/
+├── postman/
+│   └── Gerenciador-de-Tarefas.postman_collection.json
+├── src/
+│   └── main/
+│       ├── java/
+│       └── resources/
+├── .gitignore
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+└── README.md
+```
+
+---
+
+## 🎯 Objetivo Acadêmico
+
+O projeto foi desenvolvido com o objetivo de aplicar conceitos de desenvolvimento de APIs REST utilizando Java e Spring Boot.
+
+Principais conceitos praticados:
+
+- Arquitetura em camadas
+- API REST
+- Injeção de dependências
+- Spring Boot
+- Spring Data JPA
+- Hibernate
+- Mapeamento objeto-relacional
+- Entidades JPA
+- Relacionamentos `@ManyToOne`
+- Enums
+- Repositórios
+- Serviços
+- Controllers
+- DTOs através de `records`
+- Tratamento de exceções
+- Persistência em PostgreSQL
+- Consultas derivadas do Spring Data
+- Testes de endpoints
+- Versionamento com Git
+
+---
+
+## 👨‍💻 Autor
+
+**José Gustavo Gonçalves da Silva**
+
+**Matrícula:** 47531363
+
+Projeto desenvolvido para fins acadêmicos.
+
+---
+
+<div align="center">
+
+### 📋 Gerenciador de Tarefas
 
-Também existem validações para os relacionamentos.
+**Java • Spring Boot • PostgreSQL • JPA • REST API**
 
-Por exemplo, ao tentar criar uma tarefa utilizando um projeto inexistente:
-
-{
-  "projetoId": 999
-}
-
-a API retorna:
-
-{
-  "erro": "Projeto nao encontrado: 999",
-  "momento": "..."
-}
-
-O mesmo ocorre quando é informado um responsável inexistente.
-
-🧪 Testes realizados
-
-Durante a validação da aplicação foram testados:
-
-Projetos
-Listagem de projetos;
-Criação de projeto;
-Consulta posterior confirmando a persistência.
-Responsáveis
-Listagem de responsáveis;
-Criação de responsável.
-Tarefas
-Criação;
-Listagem;
-Busca por ID;
-Filtro por status;
-Filtro por projeto;
-Filtro combinado;
-Atualização;
-Alteração para CONCLUIDA;
-Registro automático de concluidaEm;
-Exclusão.
-Tratamento de erros
-
-Também foram testados:
-
-busca de tarefa inexistente;
-criação de tarefa com projeto inexistente;
-criação de tarefa com responsável inexistente;
-exclusão de tarefa inexistente.
-🐘 Banco de dados
-
-O projeto utiliza PostgreSQL.
-
-Banco utilizado nos testes:
-
-gerenciador_tarefas
-
-Configuração utilizada durante os testes:
-
-Host: 127.0.0.1
-Porta: 5432
-Banco: gerenciador_tarefas
-
-As tabelas principais são:
-
-projeto
-responsavel
-tarefa
-
-O Hibernate/JPA realizou a persistência e criação da estrutura utilizada pela aplicação.
-
-▶️ Como executar o projeto
-1. Pré-requisitos
-
-Instale:
-
-Java 25;
-PostgreSQL 18;
-IntelliJ IDEA ou outra IDE compatível;
-Git, caso o projeto seja clonado.
-
-Verifique o Java:
-
-java -version
-
-Verifique o Maven Wrapper:
-
-.\mvnw.cmd -version
-2. Configurar o PostgreSQL
-
-Crie o banco:
-
-CREATE DATABASE gerenciador_tarefas;
-
-Depois, configure as credenciais no arquivo:
-
-src/main/resources/application.properties
-
-Exemplo:
-
-spring.datasource.url=jdbc:postgresql://127.0.0.1:5432/gerenciador_tarefas
-spring.datasource.username=postgres
-spring.datasource.password=SUA_SENHA
-
-Substitua SUA_SENHA pela senha configurada no PostgreSQL.
-
-3. Executar a aplicação
-
-No terminal, dentro da pasta do projeto:
-
-.\mvnw.cmd spring-boot:run
-
-Quando a aplicação iniciar corretamente, deverá aparecer uma mensagem semelhante a:
-
-Tomcat started on port 8080 (http)
-
-e:
-
-Started GerenciadorTarefasApplication
-🧠 Conceitos demonstrados
-
-Este projeto utiliza diversos conceitos importantes de desenvolvimento backend.
-
-API REST
-
-A aplicação disponibiliza recursos através de endpoints HTTP.
-
-HTTP Methods
-
-São utilizados:
-
-GET
-POST
-PUT
-DELETE
-HTTP Status Codes
-
-Exemplos utilizados:
-
-201 Created
-204 No Content
-
-Além das respostas de erro para recursos inexistentes.
-
-ORM
-
-O Hibernate realiza o mapeamento entre objetos Java e tabelas do PostgreSQL.
-
-JPA
-
-As entidades são mapeadas utilizando anotações como:
-
-@Entity
-@Table
-@Id
-@GeneratedValue
-@Column
-@ManyToOne
-@JoinColumn
-@Enumerated
-Spring Data JPA
-
-Os repositories utilizam JpaRepository, reduzindo a necessidade de implementar manualmente operações CRUD.
-
-Injeção de dependência
-
-Os controllers e services recebem suas dependências através do construtor.
-
-DTO / Request
-
-Os controllers utilizam record para representar os dados recebidos nas requisições.
-
-Exemplo:
-
-public record ProjetoRequest(
-    String nome,
-    String descricao
-) {}
-Enum
-
-Status e Prioridade restringem os valores aceitos pela aplicação.
-
-Regras de negócio
-
-A aplicação possui regras como:
-
-tarefa começa como NOVA;
-prioridade padrão é MEDIA;
-projeto é obrigatório;
-responsável é opcional;
-conclusão registra data e hora;
-retorno para outro status remove a data de conclusão.
-📚 Fluxo de uma requisição
-
-Um exemplo de criação de tarefa:
-
-Cliente
-   │
-   │ POST /tarefas
-   ▼
-TarefaController
-   │
-   │ dados da requisição
-   ▼
-TarefaService
-   │
-   ├── busca Projeto
-   │
-   ├── busca Responsável
-   │
-   ▼
-TarefaRepository
-   │
-   ▼
-Hibernate / JPA
-   │
-   ▼
-PostgreSQL
-
-O fluxo inverso ocorre para retornar a resposta ao cliente.
-
-📂 Principais classes
-GerenciadorTarefasApplication
-│
-├── controller
-│   ├── ProjetoController
-│   ├── ResponsavelController
-│   └── TarefaController
-│
-├── domain
-│   ├── Projeto
-│   ├── Responsavel
-│   ├── Tarefa
-│   ├── Status
-│   ├── Prioridade
-│   └── exception
-│       └── RecursoNaoEncontradoException
-│
-├── repository
-│   ├── ProjetoRepository
-│   ├── ResponsavelRepository
-│   └── TarefaRepository
-│
-└── service
-    ├── ProjetoService
-    ├── ResponsavelService
-    └── TarefaService
-⚠️ Observação sobre caracteres no terminal
-
-Durante os testes realizados pelo PowerShell/psql, alguns caracteres acentuados apareceram de forma incorreta no terminal, por exemplo:
-
-GestÃ£o
-Gustavo GonÃ§alves
-
-Isso está relacionado à codificação da página de código do console do Windows, conforme informado pelo próprio psql durante a execução.
-
-A aplicação e o banco estavam funcionando normalmente; o problema observado estava na exibição dos caracteres no terminal.
-
-✅ Status do projeto
-
-O backend foi executado e validado localmente.
-
-Foram confirmados:
-
-conexão com PostgreSQL;
-criação e persistência das entidades;
-relacionamentos entre tabelas;
-operações CRUD;
-filtros;
-atualização de tarefas;
-controle de conclusão;
-exclusão;
-tratamento de recursos inexistentes;
-validação de projeto e responsável.
-
-O projeto encontra-se funcional para os requisitos implementados.
-
-👨‍💻 Autor
-
-José Gustavo Gonçalves da Silva
-Matrícula: 47531363
+</div>
