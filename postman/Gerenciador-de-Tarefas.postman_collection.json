@@ -1,0 +1,301 @@
+{
+  "info": {
+    "name": "Gerenciador de Tarefas",
+    "_postman_id": "gerenciador-tarefas-backend-i",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - Criar projeto",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/projetos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "projetos"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Projeto Back-end\",\n  \"descricao\": \"Projeto da disciplina\"\n}"
+        }
+      }
+    },
+    {
+      "name": "02 - Criar responsavel",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/responsaveis",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "responsaveis"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Gustavo\",\n  \"email\": \"gustavo@example.com\"\n}"
+        }
+      }
+    },
+    {
+      "name": "03 - Criar tarefa",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/tarefas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tarefas"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titulo\": \"Primeira tarefa\",\n  \"descricao\": \"Testar a API\",\n  \"prioridade\": \"ALTA\",\n  \"prazo\": \"2026-09-30\",\n  \"projetoId\": 1,\n  \"responsavelId\": 1\n}"
+        }
+      }
+    },
+    {
+      "name": "04 - Criar segunda tarefa",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/tarefas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tarefas"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titulo\": \"Segunda tarefa\",\n  \"descricao\": \"Outra tarefa\",\n  \"prioridade\": \"BAIXA\",\n  \"prazo\": \"2026-10-05\",\n  \"projetoId\": 1\n}"
+        }
+      }
+    },
+    {
+      "name": "05 - Criar terceira tarefa",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/tarefas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tarefas"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titulo\": \"Terceira tarefa\",\n  \"descricao\": \"Mais uma tarefa\",\n  \"prioridade\": \"MEDIA\",\n  \"prazo\": \"2026-10-10\",\n  \"projetoId\": 1\n}"
+        }
+      }
+    },
+    {
+      "name": "06 - Listar projetos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/projetos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "projetos"
+          ]
+        }
+      }
+    },
+    {
+      "name": "07 - Listar responsaveis",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/responsaveis",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "responsaveis"
+          ]
+        }
+      }
+    },
+    {
+      "name": "08 - Listar tarefas",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/tarefas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tarefas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "09 - Filtrar por status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/tarefas?status=NOVA",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tarefas?status=NOVA"
+          ]
+        }
+      }
+    },
+    {
+      "name": "10 - Buscar tarefa",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/tarefas/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tarefas",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "11 - Atualizar e concluir",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/tarefas/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tarefas",
+            "1"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titulo\": \"Primeira tarefa concluida\",\n  \"descricao\": \"Tarefa atualizada\",\n  \"status\": \"CONCLUIDA\",\n  \"prioridade\": \"ALTA\",\n  \"prazo\": \"2026-09-30\",\n  \"projetoId\": 1,\n  \"responsavelId\": 1\n}"
+        }
+      }
+    },
+    {
+      "name": "12 - Excluir tarefa",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/tarefas/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tarefas",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "13 - Confirmar 404",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/tarefas/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tarefas",
+            "1"
+          ]
+        }
+      }
+    }
+  ]
+}
